@@ -1,7 +1,8 @@
 # AWS Spot Price Checker
 
 AWS Spot Price Checker is a Rust-based CLI tool to check the current spot prices of specified EC2 instance types in a particular region. It provides details like architecture, vCPUs, memory, and displays the cheapest hourly rate across availability zones.
-Features
+
+### Features:
 
     Retrieve the current spot prices for specified EC2 instance types.
     Display architecture, vCPUs, and memory information for each instance type.
@@ -13,12 +14,6 @@ Features
 
     Rust (version 1.58 or later)
     AWS credentials configured via AWS CLI or environment variables.
-
-To install Rust, you can use rustup:
-
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
 
 ### Build the Project
 
@@ -53,6 +48,7 @@ Sample Output:
 
 ![image](./sample.png)
 
+
 ### AWS Credentials
 
 Ensure that your AWS credentials are set up properly before using the tool. The tool relies on AWS SDK for Rust, which uses the default credentials provider chain:
@@ -62,9 +58,12 @@ Ensure that your AWS credentials are set up properly before using the tool. The 
     AWS CLI configuration
 
 For more details, refer to the AWS SDK Documentation.
-Contributing
 
-Feel free to open issues or submit pull requests to improve this tool. Contributions are welcome!
+
+### Contributing
+
+Feel free to open issues or submit pull requests to improve this tool. Contributions are welcome although this was created for fun so maintaining isn't my highest concern.
+
 ### Acknowledgments
 
 Special thanks to the [awespottr](https://github.com/arithmetric/awespottr) repository by [arithmetric](https://github.com/arithmetric) for inspiring this project. 
@@ -78,6 +77,6 @@ Chrono: Date and time library for Rust
 
 Colored: Terminal text coloring
 
-License
+### License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
