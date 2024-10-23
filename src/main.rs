@@ -21,7 +21,7 @@ async fn main() {
 
     // Parse command-line arguments using clap
     let matches = Command::new("AWS Spot Price Checker")
-        .version("3.2.1")
+        .version("3.2.2")
         .author("Daniel James <mail@danjames.co.uk>")
         .about("Check AWS Spot Instance prices")
         .arg(
@@ -47,7 +47,7 @@ async fn main() {
         .collect();
     let region = matches
         .get_one::<String>("region")
-        .map_or("us-west-2", |s| s.as_str());
+        .map_or("eu-west-2", |s| s.as_str());
 
     // Iterate over each instance type and get spot prices and architecture
     for ec2_type in ec2_types {
