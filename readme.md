@@ -52,27 +52,7 @@ Options:
 
 Sample Output:
 
-bash
-
-AWS Spot Price Checker
-======================
-
-Instance Type: m5a.2xlarge
-Region: eu-west-2
-
-Architecture: x86_64
-vCPU's: 8
-Memory: 32 GiB
-
------------------------------------------------
-| Availability Zone      | Hourly Rate         |
------------------------------------------------
-| eu-west-2a             | $0.2008             |
-| eu-west-2b             | $0.2015             |
-| eu-west-2c             | $0.2115             |
------------------------------------------------
-
-💡 Cheapest hourly rate: $0.2008 in zone eu-west-2a
+![image](./sample.png)
 
 AWS Credentials
 
