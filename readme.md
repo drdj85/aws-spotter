@@ -20,7 +20,7 @@ AWS Spot Price Checker is a Rust-based CLI tool to check the current spot prices
 Clone the repository and build the project in release mode:
 
 ```bash
-git clone https://github.com/your-username/aws-spotter.git
+git clone https://github.com/drdj85/aws-spotter.git
 cd aws-spotter
 cargo build --release
 ```
