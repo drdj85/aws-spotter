@@ -1,5 +1,5 @@
 use rusoto_core::Region;
-use rusoto_ec2::{Ec2, Ec2Client, DescribeSpotPriceHistoryRequest};
+use rusoto_ec2::{Ec2, Ec2Client, DescribeSpotPriceHistoryRequest, DescribeInstanceTypesRequest};
 use clap::{Arg, Command};
 use chrono::{Utc, Duration};
 use colored::*;
@@ -17,11 +17,11 @@ async fn main() {
                                       | |                                  
                                       (_)                                  
    "#;
-       println!("{}", custom_art.cyan());
+    println!("{}", custom_art.cyan());
 
     // Parse command-line arguments using clap
     let matches = Command::new("AWS Spot Price Checker")
-        .version("0.1.0")
+        .version("3.2.1")
         .author("Daniel James <mail@danjames.co.uk>")
         .about("Check AWS Spot Instance prices")
         .arg(
@@ -49,11 +49,20 @@ async fn main() {
         .get_one::<String>("region")
         .map_or("us-west-2", |s| s.as_str());
 
-    // Iterate over each instance type and get spot prices
+    // Iterate over each instance type and get spot prices and architecture
     for ec2_type in ec2_types {
         println!("{}\n======================\n", "AWS Spot Price Checker".bright_blue());
         println!("Instance Type: {}", ec2_type.bright_green());
         println!("Region: {}\n", region.bright_green());
+
+        match get_instance_details(ec2_type, region).await {
+            Ok((architecture, vcpus, memory)) => {
+                println!("Architecture: {}", architecture.bright_green());
+                println!("vCPU's: {}", vcpus.to_string().bright_green());
+                println!("Memory: {} GiB\n", memory.to_string().bright_green());
+            },
+            Err(e) => eprintln!("Error fetching instance details for {}: {}", ec2_type, e),
+        }
 
         if let Err(e) = get_spot_prices(ec2_type, region).await {
             eprintln!("Error fetching spot prices for {}: {}", ec2_type, e);
@@ -142,4 +151,32 @@ async fn get_spot_prices(instance_type: &str, region: &str) -> Result<(), Box<dy
     );
 
     Ok(())
+}
+
+async fn get_instance_details(instance_type: &str, region: &str) -> Result<(String, i64, f64), Box<dyn std::error::Error>> {
+    let region = region.parse::<Region>()?;
+    let ec2 = Ec2Client::new(region);
+
+    let request = DescribeInstanceTypesRequest {
+        instance_types: Some(vec![instance_type.to_string()]),
+        ..Default::default()
+    };
+
+    let result = ec2.describe_instance_types(request).await?;
+
+    if let Some(instance_types) = result.instance_types {
+        if let Some(instance) = instance_types.into_iter().next() {
+            let architecture = instance.processor_info
+                .and_then(|p| p.supported_architectures)
+                .unwrap_or_default()
+                .join(", ");
+            let vcpus = instance.v_cpu_info.map_or(0, |v| v.default_v_cpus.unwrap_or(0));
+            let memory = instance.memory_info
+                .map_or(0.0, |m| m.size_in_mi_b.unwrap_or(0) as f64 / 1024.0); // Convert MiB to GiB
+
+            return Ok((architecture, vcpus, memory));
+        }
+    }
+
+    Err("Instance details not found".into())
 }
