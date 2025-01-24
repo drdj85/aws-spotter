@@ -105,7 +105,7 @@ async fn get_spot_prices(instance_type: &str, region: &str) -> Result<(), Box<dy
                 zones
                     .entry(zone.clone())
                     .and_modify(|(prev_ts, prev_price)| {
-                        if &timestamp > prev_ts {
+                        if timestamp > *prev_ts {
                             *prev_ts = timestamp.clone();
                             *prev_price = price;
                         }
